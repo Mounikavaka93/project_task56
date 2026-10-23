@@ -1,0 +1,38 @@
+export const OBSERVATORIES = [
+  {
+    id: 'kyoto',
+    name: 'Kyoto',
+    admin1: 'Kyoto',
+    country: 'Japan',
+    latitude: 35.0116,
+    longitude: 135.7681,
+    source: 'search',
+  },
+  {
+    id: 'reykjavik',
+    name: 'Reykjavík',
+    admin1: 'Capital Region',
+    country: 'Iceland',
+    latitude: 64.1466,
+    longitude: -21.9426,
+    source: 'search',
+  },
+  {
+    id: 'lisbon',
+    name: 'Lisbon',
+    admin1: 'Lisbon',
+    country: 'Portugal',
+    latitude: 38.7223,
+    longitude: -9.1393,
+    source: 'search',
+  },
+  {
+    id: 'queenstown',
+    name: 'Queenstown',
+    admin1: 'Otago',
+    country: 'New Zealand',
+    latitude: -45.0312,
+    longitude: 168.6626,
+    source: 'search',
+  },
+];
