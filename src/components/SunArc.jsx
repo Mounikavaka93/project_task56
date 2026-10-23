@@ -30,13 +30,24 @@ export default function SunArc({ sunrise, sunset, utcOffset, now }) {
         <polyline points={toPolyline(track)} fill="none" stroke="currentColor" strokeOpacity="0.2" strokeWidth="2" strokeLinejoin="round" strokeLinecap="round" />
         <polyline points={toPolyline(traveled)} fill="none" stroke="var(--copper)" strokeWidth="2.6" strokeLinejoin="round" strokeLinecap="round" />
         <line x1={cx - radius} y1={cy} x2={cx + radius} y2={cy} stroke="currentColor" strokeOpacity="0.22" />
-        <circle cx={sun[0]} cy={sun[1]} r="11" fill="var(--copper)" opacity={up ? 0.18 : 0.08} />
-        <circle cx={sun[0]} cy={sun[1]} r="6.5" fill="var(--copper)" opacity={up ? 1 : 0.45} />
+        <g className="sun-pulse">
+          <circle cx={sun[0]} cy={sun[1]} r="11" fill="var(--copper)" opacity={up ? 0.18 : 0.08} />
+          <circle cx={sun[0]} cy={sun[1]} r="6.5" fill="var(--copper)" opacity={up ? 1 : 0.45} />
+        </g>
       </svg>
-      <div className="mt-1 grid grid-cols-3 gap-2 text-[11px] uppercase tracking-[0.14em] text-muted">
-        <span>Sunrise {clockFromIso(sunrise)}</span>
-        <span className="text-center">{up ? 'Sun on the arc' : 'Below the horizon'}</span>
-        <span className="text-right">Sunset {clockFromIso(sunset)}</span>
+      <div className="mx-[19%] mt-1 grid grid-cols-3 items-start gap-2 text-[11px] uppercase leading-tight tracking-[0.12em] text-muted">
+        <span>
+          Sunrise
+          <span className="mt-0.5 block tracking-normal text-ink">{clockFromIso(sunrise)}</span>
+        </span>
+        <span className="text-center">
+          {up ? 'Above' : 'Below'}
+          <span className="mt-0.5 block tracking-normal text-ink">horizon</span>
+        </span>
+        <span className="text-right">
+          Sunset
+          <span className="mt-0.5 block tracking-normal text-ink">{clockFromIso(sunset)}</span>
+        </span>
       </div>
     </div>
   );

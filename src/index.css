@@ -43,6 +43,11 @@ html.dark {
 
 * { box-sizing: border-box; }
 
+html {
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+}
+
 html, body, #root { min-height: 100%; }
 
 body {
@@ -53,6 +58,13 @@ body {
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   overflow-x: clip;
+  scrollbar-width: none;
+}
+
+*::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  display: none;
 }
 
 html.dark body { background: #070b14; }
@@ -232,6 +244,43 @@ html.dark .grain { opacity: 0.14; }
   animation: spin 42s linear infinite;
 }
 
+.animate-spin-reverse {
+  transform-origin: center;
+  animation: spin-reverse 26s linear infinite;
+}
+
+.temp-halo {
+  position: absolute;
+  z-index: -1;
+  width: 8.5rem;
+  height: 8.5rem;
+  border-radius: 999px;
+  background: radial-gradient(circle, color-mix(in srgb, var(--copper) 42%, transparent), transparent 68%);
+  animation: halo 4.8s ease-in-out infinite;
+}
+
+.sun-pulse {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: sun-pulse 3.8s ease-in-out infinite;
+}
+
+.range-fill {
+  transition: left 0.8s cubic-bezier(0.16, 1, 0.3, 1), width 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.view-rise {
+  animation: rise 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-timeline: view();
+  animation-range: entry 0% cover 28%;
+}
+
+.rise-item {
+  animation: rise 0.8s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-timeline: view();
+  animation-range: entry 5% cover 36%;
+}
+
 .wx-spin {
   transform-box: fill-box;
   transform-origin: center;
@@ -248,16 +297,13 @@ html.dark .grain { opacity: 0.14; }
   min-width: 0;
   max-width: 100%;
   overflow-x: auto;
-  scrollbar-width: thin;
-  scrollbar-color: var(--line) transparent;
+  scroll-behavior: smooth;
+  scroll-snap-type: x proximity;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 
-.rail::-webkit-scrollbar { height: 8px; }
-.rail::-webkit-scrollbar-track { background: transparent; }
-.rail::-webkit-scrollbar-thumb {
-  background: var(--line);
-  border-radius: 999px;
-}
+.rail > li { scroll-snap-align: start; }
 
 @media (max-width: 380px) {
   .wordmark-sub { display: none; }
@@ -325,4 +371,18 @@ html.dark .grain { opacity: 0.14; }
 @keyframes pulse-ring {
   0% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--copper) 55%, transparent); }
   100% { box-shadow: 0 0 0 12px transparent; }
+}
+
+@keyframes spin-reverse {
+  to { transform: rotate(-360deg); }
+}
+
+@keyframes halo {
+  0%, 100% { transform: scale(0.84); opacity: 0.42; }
+  50% { transform: scale(1.08); opacity: 0.9; }
+}
+
+@keyframes sun-pulse {
+  0%, 100% { transform: scale(1); opacity: 0.85; }
+  50% { transform: scale(1.18); opacity: 1; }
 }

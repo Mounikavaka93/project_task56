@@ -22,9 +22,9 @@ export default function DailyForecast({ days, unit, timezone, now }) {
   const span = weekMax - weekMin || 1;
 
   return (
-    <section className="glass min-w-0 animate-rise rounded-[2rem] p-5 sm:p-6" style={{ animationDelay: '240ms' }}>
+    <section className="glass view-rise min-w-0 rounded-[2rem] p-5 sm:p-6">
       <SectionHeading index="02 — Week" title="Seven days out" caption={`High and low · ${unitSymbol(unit)}`} />
-      <ul className="grid grid-cols-2 gap-3 md:grid-cols-4 lg:grid-cols-7">
+      <ul className="grid grid-cols-2 items-stretch gap-3 md:grid-cols-4 lg:grid-cols-7">
         {days.map((day, index) => {
           const parts = calendarParts(day.date);
           const { label } = describeWeather(day.code);
@@ -34,31 +34,33 @@ export default function DailyForecast({ days, unit, timezone, now }) {
           const width = Math.max(8, ((day.max - day.min) / span) * 100);
           const isToday = day.date === todayKey;
           return (
-            <li key={day.date}>
+            <li key={day.date} className="h-full">
               <article
-                className="card-hover sheen h-full rounded-3xl border border-line bg-glass/45 px-3 py-4"
-                style={{ animationDelay: `${index * 50}ms` }}
+                className="card-hover sheen rise-item flex h-full flex-col rounded-3xl border border-line bg-glass/45 px-3 py-4"
+                style={{ animationRange: `entry ${6 + index * 2}% cover ${34 + index}%` }}
               >
                 <p className="text-[11px] font-medium uppercase tracking-[0.16em] text-copper">{isToday ? 'Today' : parts.weekday}</p>
-                <p className="font-display text-2xl leading-none">{parts.day}</p>
+                <p className="mt-1 font-display text-2xl leading-none">{parts.day}</p>
                 <p className="text-xs text-muted">{parts.month}</p>
                 <WeatherIcon code={day.code} isDay className="mt-3 h-10 w-10 text-ink" />
                 <p className="mt-2 min-h-10 text-sm leading-tight">{label}</p>
-                <p className="mt-2 text-sm tabular-nums">
-                  <span className="font-medium">{high == null ? '—' : Math.round(high)}°</span>
-                  <span className="text-muted"> / {low == null ? '—' : Math.round(low)}°</span>
-                </p>
-                <div className="relative mt-3 h-1.5 rounded-full bg-line">
-                  <div
-                    className="absolute h-full rounded-full bg-gradient-to-r from-celadon to-copper"
-                    style={{ left: `${left}%`, width: `${width}%` }}
-                  />
+                <div className="mt-auto pt-3">
+                  <p className="text-sm tabular-nums">
+                    <span className="font-medium">{high == null ? '—' : Math.round(high)}°</span>
+                    <span className="text-muted"> / {low == null ? '—' : Math.round(low)}°</span>
+                  </p>
+                  <div className="relative mt-3 h-1.5 rounded-full bg-line">
+                    <div
+                      className="range-fill absolute top-0 h-full rounded-full bg-gradient-to-r from-celadon to-copper"
+                      style={{ left: `${left}%`, width: `${Math.min(width, 100 - left)}%` }}
+                    />
+                  </div>
+                  <p className="mt-3 flex items-center gap-1 text-xs text-muted">
+                    <DropIcon className="h-3 w-3 shrink-0 text-celadon" />
+                    <span>{Math.round(day.precip)}%</span>
+                    {Number.isFinite(day.uv) ? <span className="ml-auto">UV {Math.round(day.uv)}</span> : null}
+                  </p>
                 </div>
-                <p className="mt-3 flex items-center gap-1 text-xs text-muted">
-                  <DropIcon className="h-3 w-3 text-celadon" />
-                  {Math.round(day.precip)}%
-                  {Number.isFinite(day.uv) ? <span className="ml-auto">UV {Math.round(day.uv)}</span> : null}
-                </p>
               </article>
             </li>
           );

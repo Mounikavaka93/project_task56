@@ -7,7 +7,7 @@ export default function RecentCities({ cities, activeId, onSelect, onForget }) {
   return (
     <div className="mt-3">
       <p className="mb-2 text-[11px] font-medium uppercase tracking-[0.18em] text-muted">Recent readings</p>
-      <ul className="rail flex gap-2 overflow-x-auto pb-1">
+      <ul className="rail flex gap-2">
         {cities.map((city) => {
           const active = city.id === activeId;
           return (

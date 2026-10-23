@@ -282,13 +282,35 @@ export default function Atmosphere({ scene = 'clear', theme = 'light', sunrise, 
       ctx.fillStyle = sky;
       ctx.fillRect(0, 0, width, height);
 
+      const drift = reduced ? 0 : Math.min(window.scrollY, 700) * 0.045;
+
+      if (phase === 'night' && (state.scene === 'clear' || state.scene === 'partly')) {
+        ctx.save();
+        ctx.globalCompositeOperation = 'screen';
+        ctx.lineCap = 'round';
+        for (let ribbon = 0; ribbon < 3; ribbon += 1) {
+          ctx.beginPath();
+          const yBase = height * (0.16 + ribbon * 0.07) - drift * 0.35;
+          for (let x = 0; x <= width; x += 14) {
+            const wave = Math.sin(x / 150 + time / 1700 + ribbon * 1.3) * (16 + ribbon * 8);
+            const y = yBase + wave;
+            if (x === 0) ctx.moveTo(x, y);
+            else ctx.lineTo(x, y);
+          }
+          ctx.strokeStyle = ribbon === 1 ? 'rgba(142, 217, 207, 0.22)' : 'rgba(186, 164, 236, 0.18)';
+          ctx.lineWidth = 16 - ribbon * 3;
+          ctx.stroke();
+        }
+        ctx.restore();
+      }
+
       if (shown.stars > 0.03) {
         stars.forEach((star) => {
           const twinkle = reduced ? 0.8 : 0.45 + 0.55 * Math.abs(Math.sin(time / 700 + star.phase));
           ctx.globalAlpha = star.base * shown.stars * twinkle;
           ctx.fillStyle = state.theme === 'dark' ? '#ffffff' : '#f7f4ff';
           ctx.beginPath();
-          ctx.arc(star.x * width, star.y * height, star.r, 0, Math.PI * 2);
+          ctx.arc(star.x * width, star.y * height - drift, star.r, 0, Math.PI * 2);
           ctx.fill();
         });
         ctx.globalAlpha = 1;
@@ -313,7 +335,7 @@ export default function Atmosphere({ scene = 'clear', theme = 'light', sunrise, 
         ctx.save();
         ctx.globalAlpha = shown.cloud * (state.theme === 'dark' ? 0.22 : 0.58);
         clouds.forEach((cloudPuff) => {
-          drawCloud(ctx, cloudPuff.x * width, cloudPuff.y * height, cloudPuff.s, palette.cloud);
+          drawCloud(ctx, cloudPuff.x * width, cloudPuff.y * height - drift * 0.55, cloudPuff.s, palette.cloud);
         });
         ctx.restore();
       }
@@ -412,7 +434,10 @@ export default function Atmosphere({ scene = 'clear', theme = 'light', sunrise, 
 
     resize();
     kick();
+    const onScroll = () => kick();
+
     window.addEventListener('resize', onResize);
+    window.addEventListener('scroll', onScroll, { passive: true });
     document.addEventListener('visibilitychange', onVisibility);
     media.addEventListener('change', onReduce);
 
@@ -420,6 +445,7 @@ export default function Atmosphere({ scene = 'clear', theme = 'light', sunrise, 
       cancelAnimationFrame(raf);
       running = false;
       window.removeEventListener('resize', onResize);
+      window.removeEventListener('scroll', onScroll);
       document.removeEventListener('visibilitychange', onVisibility);
       media.removeEventListener('change', onReduce);
     };

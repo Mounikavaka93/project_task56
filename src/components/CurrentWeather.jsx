@@ -37,7 +37,8 @@ export default function CurrentWeather({ place, weather, unit, now }) {
           ) : null}
         </div>
         <Instrument>
-          <p className="flex items-start justify-center text-ink">
+          <p className="relative flex items-start justify-center text-ink">
+            <span className="temp-halo" aria-hidden="true" />
             <span className="font-display text-7xl leading-none tracking-tight tabular-nums sm:text-8xl">
               <AnimatedNumber value={temperature} />
             </span>
@@ -61,8 +62,8 @@ export default function CurrentWeather({ place, weather, unit, now }) {
         <p className="mt-2 text-xs uppercase tracking-[0.14em] text-muted">Observed {clockFromIso(current.time)} local</p>
       </article>
 
-      <article className="glass sheen card-hover animate-rise flex min-w-0 flex-col justify-center rounded-[2rem] px-4 py-6 sm:px-6 xl:col-span-7" style={{ animationDelay: '120ms' }}>
-        <div className="grid grid-cols-2 gap-2 lg:grid-cols-4">
+      <article className="glass sheen card-hover animate-rise flex min-w-0 flex-col rounded-[2rem] px-4 py-6 sm:px-6 xl:col-span-7" style={{ animationDelay: '120ms' }}>
+        <div className="grid grid-cols-2 items-stretch gap-x-2 gap-y-4 lg:grid-cols-4">
           <Gauge
             label="Humidity"
             value={current.humidity}
@@ -97,12 +98,14 @@ export default function CurrentWeather({ place, weather, unit, now }) {
             caption="hPa"
           />
         </div>
-        {today ? (
-          <SunArc sunrise={today.sunrise} sunset={today.sunset} utcOffset={weather.utcOffsetSeconds} now={now} />
-        ) : null}
-        {current.precipitation > 0 ? (
-          <p className="mt-2 text-center text-sm text-muted">{current.precipitation} mm in the current hour</p>
-        ) : null}
+        <div className="mt-auto pt-4">
+          {today ? (
+            <SunArc sunrise={today.sunrise} sunset={today.sunset} utcOffset={weather.utcOffsetSeconds} now={now} />
+          ) : null}
+          {current.precipitation > 0 ? (
+            <p className="mt-2 text-center text-sm text-muted">{current.precipitation} mm in the current hour</p>
+          ) : null}
+        </div>
       </article>
     </section>
   );
